@@ -8,14 +8,14 @@ import (
 
 // AuthInfo is representing the information for authentication
 type AuthInfo struct {
-	AccountID string `url:"accountid"`
-	Username  string `url:"username"`
-	Password  string `url:"password"`
+	AccountID string `url:"AccountId"`
+	Username  string `url:"UserName"`
+	Password  string `url:"Password"`
 }
 
 // GUIDInfo is representing the information for endpoint auth
 type GUIDInfo struct {
-	GUID string `url:"guid"`
+	GUID string `url:"guid" json:"GUID,omitempty"`
 }
 
 // LoginResponse represents the success login response from ACEProject API

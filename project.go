@@ -6,6 +6,7 @@ import (
 	"github.com/dghubble/sling"
 )
 
+// ProjectResponse represents porject listing response
 type ProjectResponse struct {
 	Status  string    `json:"status"`
 	Results []Project `json:"results"`

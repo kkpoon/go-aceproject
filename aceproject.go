@@ -7,7 +7,7 @@ import (
 
 const baseURL = "http://api.aceproject.com"
 
-// APIFunction represents the ACEProject fct parameter in URL
+// Function represents the ACEProject fct parameter in URL
 type Function struct {
 	Fct    string `url:"fct"`
 	Format string `url:"format"`
