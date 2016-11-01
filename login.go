@@ -15,7 +15,8 @@ type AuthInfo struct {
 
 // GUIDInfo is representing the information for endpoint auth
 type GUIDInfo struct {
-	GUID string `url:"guid" json:"GUID,omitempty"`
+	GUID      string  `url:"guid" json:"GUID,omitempty"`
+	ErrorDesc *string `json:"ERRORDESCRIPTION,omitempty"`
 }
 
 // LoginResponse represents the success login response from ACEProject API
@@ -34,6 +35,9 @@ func (s *LoginService) Login(params *AuthInfo) (*GUIDInfo, *http.Response, error
 	loginRes := new(LoginResponse)
 	resp, err := s.sling.New().QueryStruct(CreateFunctionParam("login")).QueryStruct(params).ReceiveSuccess(loginRes)
 	if loginRes != nil && len(loginRes.Results) > 0 {
+		if loginRes.Results[0].ErrorDesc != nil {
+			return nil, resp, Error{*loginRes.Results[0].ErrorDesc}
+		}
 		return &loginRes.Results[0], resp, err
 	}
 	return nil, resp, err
