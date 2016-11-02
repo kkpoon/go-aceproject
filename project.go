@@ -14,7 +14,11 @@ type ProjectResponse struct {
 
 // Project is representing project in ACEProject
 type Project struct {
-	ID int `json:"ID"`
+	ID            int     `json:"PROJECT_ID"`
+	Name          string  `json:"PROJECT_NAME"`
+	ProjectNumber string  `json:"PROJECT_NUMBER"`
+	Type          string  `json:"PROJECT_TYPE_NAME"`
+	ErrorDesc     *string `json:"ERRORDESCRIPTION,omitempty"`
 }
 
 // ProjectService provides methods to interact with project specific action
@@ -32,8 +36,13 @@ func NewProjectService(httpClient *http.Client, guidInfo *GUIDInfo) *ProjectServ
 // List returns the project list
 func (s *ProjectService) List() ([]Project, *http.Response, error) {
 	projRes := new(ProjectResponse)
-	resp, err := s.sling.New().QueryStruct(CreateFunctionParam("getprojects")).ReceiveSuccess(projRes)
+	resp, err := s.sling.New().
+		QueryStruct(CreateFunctionParam("getprojects")).
+		ReceiveSuccess(projRes)
 	if projRes != nil && len(projRes.Results) > 0 {
+		if projRes.Results[0].ErrorDesc != nil {
+			return nil, resp, Error{*projRes.Results[0].ErrorDesc}
+		}
 		return *(&projRes.Results), resp, err
 	}
 	return make([]Project, 0), resp, err
