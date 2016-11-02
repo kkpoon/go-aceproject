@@ -8,28 +8,25 @@ import (
 
 // TimesheetSaveWorkItemResponse represents GetMyWeeks response
 type TimesheetSaveWorkItemResponse struct {
-	Status  string               `json:"status"`
-	Results []SaveWorkItemResult `json:"results"`
+	Status  string         `json:"status"`
+	Results []SaveWorkItem `json:"results"`
 }
 
 // SaveWorkItem represents logging timesheet entry to ACEProject
 type SaveWorkItem struct {
-	WeekStart  string  `url:"WeekStart,omitempty"`
-	TaskID     int64   `url:"TaskId"`
-	TimeTypeID int64   `url:"TimetypeId"`
-	HoursDay1  float64 `url:"HoursDay1,omitempty"`
-	HoursDay2  float64 `url:"HoursDay2,omitempty"`
-	HoursDay3  float64 `url:"HoursDay3,omitempty"`
-	HoursDay4  float64 `url:"HoursDay4,omitempty"`
-	HoursDay5  float64 `url:"HoursDay5,omitempty"`
-	HoursDay6  float64 `url:"HoursDay6,omitempty"`
-	HoursDay7  float64 `url:"HoursDay7,omitempty"`
-	Comments   *string `url:"Comments,omitempty"`
-}
-
-// SaveWorkItemResult represents response of timesheet entry to ACEProject
-type SaveWorkItemResult struct {
-	ErrorDesc *string `json:"ERRORDESCRIPTION,omitempty"`
+	TimesheetLineID *int64  `url:"TimesheetLineId,omitempty" json:"TIMESHEET_LINE_ID,omitempty"`
+	WeekStart       string  `url:"WeekStart,omitempty"`
+	TaskID          int64   `url:"TaskId"`
+	TimeTypeID      int64   `url:"TimetypeId"`
+	HoursDay1       float64 `url:"HoursDay1,omitempty"`
+	HoursDay2       float64 `url:"HoursDay2,omitempty"`
+	HoursDay3       float64 `url:"HoursDay3,omitempty"`
+	HoursDay4       float64 `url:"HoursDay4,omitempty"`
+	HoursDay5       float64 `url:"HoursDay5,omitempty"`
+	HoursDay6       float64 `url:"HoursDay6,omitempty"`
+	HoursDay7       float64 `url:"HoursDay7,omitempty"`
+	Comments        *string `url:"Comments,omitempty"`
+	ErrorDesc       *string `json:"ERRORDESCRIPTION,omitempty"`
 }
 
 // TimesheetService provides methods to interact with project specific action
@@ -45,7 +42,7 @@ func NewTimesheetService(httpClient *http.Client, guidInfo *GUIDInfo) *Timesheet
 }
 
 // SaveWorkItem saves the timesheet item to ACE Project
-func (s *TimesheetService) SaveWorkItem(item *SaveWorkItem) (*http.Response, error) {
+func (s *TimesheetService) SaveWorkItem(item *SaveWorkItem) (*SaveWorkItem, *http.Response, error) {
 	resObj := new(TimesheetSaveWorkItemResponse)
 	httpResp, err := s.sling.New().
 		QueryStruct(CreateFunctionParam("saveworkitem")).
@@ -53,9 +50,9 @@ func (s *TimesheetService) SaveWorkItem(item *SaveWorkItem) (*http.Response, err
 		ReceiveSuccess(resObj)
 	if resObj != nil && len(resObj.Results) > 0 {
 		if resObj.Results[0].ErrorDesc != nil {
-			return httpResp, Error{*resObj.Results[0].ErrorDesc}
+			return nil, httpResp, Error{*resObj.Results[0].ErrorDesc}
 		}
-		return httpResp, err
+		return &resObj.Results[0], httpResp, err
 	}
-	return httpResp, err
+	return nil, httpResp, err
 }
