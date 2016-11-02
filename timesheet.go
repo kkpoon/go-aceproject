@@ -6,15 +6,30 @@ import (
 	"github.com/dghubble/sling"
 )
 
-// TimesheetGetMyWeeksResponse represents GetMyWeeks response
-type TimesheetGetMyWeeksResponse struct {
-	Status  string    `json:"status"`
-	Results []MyWeeks `json:"results"`
+// TimesheetSaveWorkItemResponse represents GetMyWeeks response
+type TimesheetSaveWorkItemResponse struct {
+	Status  string               `json:"status"`
+	Results []SaveWorkItemResult `json:"results"`
 }
 
-// MyWeeks represents MyWeeks in ACEProject
-type MyWeeks struct {
-	ID int `json:"ID"`
+// SaveWorkItem represents logging timesheet entry to ACEProject
+type SaveWorkItem struct {
+	WeekStart  string  `url:"WeekStart,omitempty"`
+	TaskID     int64   `url:"TaskId"`
+	TimeTypeID int64   `url:"TimetypeId"`
+	HoursDay1  float64 `url:"HoursDay1,omitempty"`
+	HoursDay2  float64 `url:"HoursDay2,omitempty"`
+	HoursDay3  float64 `url:"HoursDay3,omitempty"`
+	HoursDay4  float64 `url:"HoursDay4,omitempty"`
+	HoursDay5  float64 `url:"HoursDay5,omitempty"`
+	HoursDay6  float64 `url:"HoursDay6,omitempty"`
+	HoursDay7  float64 `url:"HoursDay7,omitempty"`
+	Comments   *string `url:"Comments,omitempty"`
+}
+
+// SaveWorkItemResult represents response of timesheet entry to ACEProject
+type SaveWorkItemResult struct {
+	ErrorDesc *string `json:"ERRORDESCRIPTION,omitempty"`
 }
 
 // TimesheetService provides methods to interact with project specific action
@@ -29,14 +44,18 @@ func NewTimesheetService(httpClient *http.Client, guidInfo *GUIDInfo) *Timesheet
 	}
 }
 
-// GetMyWeeks returns the project list
-func (s *TimesheetService) GetMyWeeks() ([]MyWeeks, *http.Response, error) {
-	res := new(TimesheetGetMyWeeksResponse)
+// SaveWorkItem saves the timesheet item to ACE Project
+func (s *TimesheetService) SaveWorkItem(item *SaveWorkItem) (*http.Response, error) {
+	resObj := new(TimesheetSaveWorkItemResponse)
 	httpResp, err := s.sling.New().
-		QueryStruct(CreateFunctionParam("getmyweeks")).
-		ReceiveSuccess(res)
-	if res != nil && len(res.Results) > 0 {
-		return *(&res.Results), httpResp, err
+		QueryStruct(CreateFunctionParam("saveworkitem")).
+		QueryStruct(item).
+		ReceiveSuccess(resObj)
+	if resObj != nil && len(resObj.Results) > 0 {
+		if resObj.Results[0].ErrorDesc != nil {
+			return httpResp, Error{*resObj.Results[0].ErrorDesc}
+		}
+		return httpResp, err
 	}
-	return make([]MyWeeks, 0), httpResp, err
+	return httpResp, err
 }
