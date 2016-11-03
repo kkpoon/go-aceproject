@@ -34,10 +34,10 @@ func TestLoginFail(t *testing.T) {
 	svc := aceproject.NewLoginService(&http.Client{})
 	guidInfo, _, err := svc.Login(&authInfo)
 
-	if guidInfo == nil && len((*guidInfo).GUID) != 0 {
-		t.Error("Expected to get GUID, got ", nil)
+	if guidInfo != nil {
+		t.Error("Expected to get nil GUID, got ", guidInfo)
 	}
-	if err != nil {
-		t.Error("Expected it is not giving error even failed, got ", err)
+	if err == nil {
+		t.Error("Expected it has err, got ", err)
 	}
 }
