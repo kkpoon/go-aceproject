@@ -14,7 +14,7 @@ type ProjectResponse struct {
 
 // Project is representing project in ACEProject
 type Project struct {
-	ID            int     `json:"PROJECT_ID"`
+	ID            int64   `json:"PROJECT_ID"`
 	Name          string  `json:"PROJECT_NAME"`
 	ProjectNumber string  `json:"PROJECT_NUMBER"`
 	Type          string  `json:"PROJECT_TYPE_NAME"`
