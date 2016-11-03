@@ -33,7 +33,9 @@ func TestProjectList(t *testing.T) {
 
 	projects, _, err := proj.List()
 
-	if projects == nil && len(projects) > 0 {
+	if projects == nil {
+		t.Error("Expected to have a project list, but it is nil")
+	} else if len(projects) == 0 {
 		t.Error("Expected to have a project list, but size=", len(projects))
 	}
 	if err != nil {

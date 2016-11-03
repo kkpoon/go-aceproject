@@ -33,7 +33,9 @@ func TestTaskList(t *testing.T) {
 
 	tasks, _, err := taskSvc.List()
 
-	if tasks == nil && len(tasks) > 0 {
+	if tasks == nil {
+		t.Error("Expected to have a task list, but it is nil")
+	} else if len(tasks) == 0 {
 		t.Error("Expected to have a task list, but size=", len(tasks))
 	}
 	if err != nil {
@@ -78,7 +80,9 @@ func TestTaskListWithProjectId(t *testing.T) {
 	projectID := projects[0].ID
 	tasks, _, err := taskSvc.ListWithProject(projectID)
 
-	if tasks == nil && len(tasks) > 0 {
+	if tasks == nil {
+		t.Error("Expected to have a task list, but it is nil")
+	} else if len(tasks) == 0 {
 		t.Error("Expected to have a task list, but size=", len(tasks))
 	}
 	if err != nil {
