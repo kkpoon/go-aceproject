@@ -18,13 +18,13 @@ type SaveWorkItem struct {
 	WeekStart       string  `url:"WeekStart,omitempty"`
 	TaskID          int64   `url:"TaskId"`
 	TimeTypeID      int64   `url:"TimetypeId"`
-	HoursDay1       float64 `url:"HoursDay1,omitempty"`
-	HoursDay2       float64 `url:"HoursDay2,omitempty"`
-	HoursDay3       float64 `url:"HoursDay3,omitempty"`
-	HoursDay4       float64 `url:"HoursDay4,omitempty"`
-	HoursDay5       float64 `url:"HoursDay5,omitempty"`
-	HoursDay6       float64 `url:"HoursDay6,omitempty"`
-	HoursDay7       float64 `url:"HoursDay7,omitempty"`
+	HoursDay1       float64 `url:"HoursDay1"`
+	HoursDay2       float64 `url:"HoursDay2"`
+	HoursDay3       float64 `url:"HoursDay3"`
+	HoursDay4       float64 `url:"HoursDay4"`
+	HoursDay5       float64 `url:"HoursDay5"`
+	HoursDay6       float64 `url:"HoursDay6"`
+	HoursDay7       float64 `url:"HoursDay7"`
 	Comments        *string `url:"Comments,omitempty"`
 	ErrorDesc       *string `json:"ERRORDESCRIPTION,omitempty"`
 }
