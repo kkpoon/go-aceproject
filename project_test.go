@@ -22,7 +22,7 @@ func TestProjectList(t *testing.T) {
 	svc := aceproject.NewLoginService(client)
 	guidInfo, _, err := svc.Login(&authInfo)
 
-	if guidInfo == nil && len((*guidInfo).GUID) != 36 {
+	if guidInfo == nil {
 		t.Error("Expected to login success")
 	}
 	if err != nil {
