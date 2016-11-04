@@ -19,11 +19,11 @@ type TaskResponse struct {
 
 // Task is representing task in ACEProject
 type Task struct {
-	ID            int     `json:"TASK_ID"`
+	ID            int64   `json:"TASK_ID"`
 	Name          string  `json:"TASK_RESUME"`
-	TaskGroupID   int     `json:"TASK_GROUP_ID"`
+	TaskGroupID   int64   `json:"TASK_GROUP_ID"`
 	TaskGroupName string  `json:"TASK_GROUP_NAME"`
-	ProjectID     int     `json:"PROJECT_ID"`
+	ProjectID     int64   `json:"PROJECT_ID"`
 	ProjectName   string  `json:"PROJECT_NAME"`
 	ErrorDesc     *string `json:"ERRORDESCRIPTION,omitempty"`
 }

@@ -4,46 +4,12 @@ import (
 	"net/http"
 	"os"
 	"testing"
+	"time"
 
 	aceproject "github.com/kkpoon/go-aceproject"
 )
 
-func TestTaskList(t *testing.T) {
-	accountid := os.Getenv("ACE_ACCOUNTID")
-	username := os.Getenv("ACE_USERNAME")
-	password := os.Getenv("ACE_PASSWORD")
-
-	if accountid == "" || username == "" || password == "" {
-		t.Error("ACE_ACCOUNTID, ACE_USERNAME, ACE_PASSWORD are not set in environment variable")
-	}
-
-	authInfo := aceproject.AuthInfo{accountid, username, password}
-	client := &http.Client{}
-	svc := aceproject.NewLoginService(client)
-	guidInfo, _, err := svc.Login(&authInfo)
-
-	if guidInfo == nil {
-		t.Error("Expected to login success")
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
-
-	taskSvc := aceproject.NewTaskService(client, guidInfo)
-
-	tasks, _, err := taskSvc.List()
-
-	if tasks == nil {
-		t.Error("Expected to have a task list, but it is nil")
-	} else if len(tasks) == 0 {
-		t.Error("Expected to have a task list, but size=", len(tasks))
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
-}
-
-func TestTaskListWithProjectId(t *testing.T) {
+func TestDailyTimesheetListWithProjectId(t *testing.T) {
 	accountid := os.Getenv("ACE_ACCOUNTID")
 	username := os.Getenv("ACE_USERNAME")
 	password := os.Getenv("ACE_PASSWORD")
@@ -77,15 +43,49 @@ func TestTaskListWithProjectId(t *testing.T) {
 		t.Error("Expected no error, got ", err)
 	}
 
-	taskSvc := aceproject.NewTaskService(client, guidInfo)
+	tsSvc := aceproject.NewTimesheetService(client, guidInfo)
 
 	projectID := projects[0].ID
-	tasks, _, err := taskSvc.ListWithProject(projectID)
+	ts, _, err := tsSvc.ListAllDailyWithProject(projectID)
 
-	if tasks == nil {
-		t.Error("Expected to have a task list, but it is nil")
-	} else if len(tasks) == 0 {
-		t.Error("Expected to have a task list, but size=", len(tasks))
+	if ts == nil {
+		t.Error("Expected to have a daily time sheet list, but it is nil")
+	}
+	if err != nil {
+		t.Error("Expected no error, got ", err)
+	}
+}
+
+func TestDailyTimesheetListWithDateRange(t *testing.T) {
+	accountid := os.Getenv("ACE_ACCOUNTID")
+	username := os.Getenv("ACE_USERNAME")
+	password := os.Getenv("ACE_PASSWORD")
+
+	if accountid == "" || username == "" || password == "" {
+		t.Error("ACE_ACCOUNTID, ACE_USERNAME, ACE_PASSWORD are not set in environment variable")
+	}
+
+	authInfo := aceproject.AuthInfo{accountid, username, password}
+	client := &http.Client{}
+	svc := aceproject.NewLoginService(client)
+	guidInfo, _, err := svc.Login(&authInfo)
+
+	if guidInfo == nil {
+		t.Error("Expected to login success")
+	}
+	if err != nil {
+		t.Error("Expected no error, got ", err)
+	}
+
+	tsSvc := aceproject.NewTimesheetService(client, guidInfo)
+
+	ts, _, err := tsSvc.ListAllDailyWithDateRange(
+		time.Date(2016, 10, 1, 0, 0, 0, 0, time.UTC),
+		time.Date(2016, 10, 6, 0, 0, 0, 0, time.UTC),
+	)
+
+	if ts == nil {
+		t.Error("Expected to have a daily time sheet list, but it is nil")
 	}
 	if err != nil {
 		t.Error("Expected no error, got ", err)
