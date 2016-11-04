@@ -8,7 +8,7 @@ import (
 	aceproject "github.com/kkpoon/go-aceproject"
 )
 
-func TestTaskList(t *testing.T) {
+func TestUserList(t *testing.T) {
 	accountid := os.Getenv("ACE_ACCOUNTID")
 	username := os.Getenv("ACE_USERNAME")
 	password := os.Getenv("ACE_PASSWORD")
@@ -29,21 +29,21 @@ func TestTaskList(t *testing.T) {
 		t.Error("Expected no error, got ", err)
 	}
 
-	taskSvc := aceproject.NewTaskService(client, guidInfo)
+	userSvc := aceproject.NewUserService(client, guidInfo)
 
-	tasks, _, err := taskSvc.List()
+	users, _, err := userSvc.List()
 
-	if tasks == nil {
-		t.Error("Expected to have a task list, but it is nil")
-	} else if len(tasks) == 0 {
-		t.Error("Expected to have a task list, but size=", len(tasks))
+	if users == nil {
+		t.Error("Expected to have a user list, but it is nil")
+	} else if len(users) == 0 {
+		t.Error("Expected to have a user list, but size=", len(users))
 	}
 	if err != nil {
 		t.Error("Expected no error, got ", err)
 	}
 }
 
-func TestTaskListWithProjectId(t *testing.T) {
+func TestUserListWithActiveness(t *testing.T) {
 	accountid := os.Getenv("ACE_ACCOUNTID")
 	username := os.Getenv("ACE_USERNAME")
 	password := os.Getenv("ACE_PASSWORD")
@@ -64,28 +64,14 @@ func TestTaskListWithProjectId(t *testing.T) {
 		t.Error("Expected no error, got ", err)
 	}
 
-	proj := aceproject.NewProjectService(client, guidInfo)
+	userSvc := aceproject.NewUserService(client, guidInfo)
 
-	projects, _, err := proj.List()
+	users, _, err := userSvc.ListWithActiveness(true)
 
-	if projects == nil {
-		t.Error("Expected to have a project list, but it is nil")
-	} else if len(projects) == 0 {
-		t.Error("Expected to have a project list, but size=", len(projects))
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
-
-	taskSvc := aceproject.NewTaskService(client, guidInfo)
-
-	projectID := projects[0].ID
-	tasks, _, err := taskSvc.ListWithProject(projectID)
-
-	if tasks == nil {
-		t.Error("Expected to have a task list, but it is nil")
-	} else if len(tasks) == 0 {
-		t.Error("Expected to have a task list, but size=", len(tasks))
+	if users == nil {
+		t.Error("Expected to have a user list, but it is nil")
+	} else if len(users) == 0 {
+		t.Error("Expected to have a user list, but size=", len(users))
 	}
 	if err != nil {
 		t.Error("Expected no error, got ", err)
