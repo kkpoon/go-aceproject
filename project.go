@@ -17,6 +17,7 @@ type Project struct {
 	ID            int64   `json:"PROJECT_ID"`
 	Name          string  `json:"PROJECT_NAME"`
 	ProjectNumber string  `json:"PROJECT_NUMBER"`
+	TypeID        int64   `json:"PROJECT_TYPE"`
 	Type          string  `json:"PROJECT_TYPE_NAME"`
 	ErrorDesc     *string `json:"ERRORDESCRIPTION,omitempty"`
 }
