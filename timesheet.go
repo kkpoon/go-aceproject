@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dghubble/sling"
+	sling "gopkg.in/dghubble/sling.v1"
 )
 
 // TimesheetSaveWorkItemResponse represents saveworkitem response

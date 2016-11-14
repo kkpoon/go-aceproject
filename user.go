@@ -3,7 +3,7 @@ package aceproject
 import (
 	"net/http"
 
-	"github.com/dghubble/sling"
+	sling "gopkg.in/dghubble/sling.v1"
 )
 
 // GetUsersParam represents getusers request parameter
