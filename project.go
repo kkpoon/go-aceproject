@@ -2,13 +2,15 @@ package aceproject
 
 import (
 	"net/http"
+	"strconv"
 
 	sling "gopkg.in/dghubble/sling.v1"
 )
 
 // GetProjectsParam represents getprojects request parameter
 type GetProjectsParam struct {
-	FilterCompletedProject bool `url:"Filtercompletedproject,omitempty"`
+	FilterCompletedProject bool   `url:"Filtercompletedproject,omitempty"`
+	ProjectID              string `url:"Projectid,omitempty"`
 }
 
 // ProjectResponse represents porject listing response
@@ -69,4 +71,21 @@ func (s *ProjectService) ListWithCompleteness(complete bool) ([]Project, *http.R
 		return *(&projRes.Results), resp, err
 	}
 	return make([]Project, 0), resp, err
+}
+
+// Get returns the project of given ID
+func (s *ProjectService) Get(projectID int64) (*Project, *http.Response, error) {
+	//
+	projRes := new(ProjectResponse)
+	resp, err := s.sling.New().
+		QueryStruct(CreateFunctionParam("getprojects")).
+		QueryStruct(&GetProjectsParam{ProjectID: strconv.FormatInt(projectID, 10)}).
+		ReceiveSuccess(projRes)
+	if projRes != nil && len(projRes.Results) > 0 {
+		if projRes.Results[0].ErrorDesc != nil {
+			return nil, resp, Error{*projRes.Results[0].ErrorDesc}
+		}
+		return &projRes.Results[0], resp, err
+	}
+	return nil, resp, err
 }
