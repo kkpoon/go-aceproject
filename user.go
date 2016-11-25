@@ -8,7 +8,7 @@ import (
 
 // GetUsersParam represents getusers request parameter
 type GetUsersParam struct {
-	FilterActive bool `url:"FilterActive,omitempty"`
+	FilterActive bool `url:"FilterActive"`
 }
 
 // UserResponse represents user listing response
