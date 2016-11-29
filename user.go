@@ -8,7 +8,7 @@ import (
 
 // GetUsersParam represents getusers request parameter
 type GetUsersParam struct {
-	FilterActive bool `url:"FilterActive"`
+	FilterActive *bool `url:"FilterActive,omitempty"`
 }
 
 // UserResponse represents user listing response
@@ -62,7 +62,7 @@ func (s *UserService) ListWithActiveness(active bool) ([]User, *http.Response, e
 	resObj := new(UserResponse)
 	resp, err := s.sling.New().
 		QueryStruct(CreateFunctionParam("getusers")).
-		QueryStruct(&GetUsersParam{FilterActive: active}).
+		QueryStruct(&GetUsersParam{FilterActive: &active}).
 		ReceiveSuccess(resObj)
 	if resObj != nil && len(resObj.Results) > 0 {
 		if resObj.Results[0].ErrorDesc != nil {

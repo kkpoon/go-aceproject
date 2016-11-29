@@ -9,7 +9,7 @@ import (
 
 // GetProjectsParam represents getprojects request parameter
 type GetProjectsParam struct {
-	FilterCompletedProject bool   `url:"Filtercompletedproject,omitempty"`
+	FilterCompletedProject *bool  `url:"Filtercompletedproject,omitempty"`
 	ProjectID              string `url:"Projectid,omitempty"`
 }
 
@@ -65,7 +65,7 @@ func (s *ProjectService) ListWithCompleteness(complete bool) ([]Project, *http.R
 	projRes := new(ProjectResponse)
 	resp, err := s.sling.New().
 		QueryStruct(CreateFunctionParam("getprojects")).
-		QueryStruct(&GetProjectsParam{FilterCompletedProject: complete}).
+		QueryStruct(&GetProjectsParam{FilterCompletedProject: &complete}).
 		ReceiveSuccess(projRes)
 	if projRes != nil && len(projRes.Results) > 0 {
 		if projRes.Results[0].ErrorDesc != nil {
