@@ -21,8 +21,10 @@ func TestLoginSuccess(t *testing.T) {
 	svc := aceproject.NewLoginService(&http.Client{})
 	guidInfo, _, err := svc.Login(&authInfo)
 
-	if guidInfo == nil && len((*guidInfo).GUID) != 36 {
-		t.Error("Expected to get GUID, got ", nil)
+	if guidInfo == nil {
+		t.Error("Expected to get GUID, got no GUID")
+	} else if len((*guidInfo).GUID) != 36 {
+		t.Error("Expected to get GUID, got GUID with length of ", len((*guidInfo).GUID))
 	}
 	if err != nil {
 		t.Error("Expected no error, got ", err)

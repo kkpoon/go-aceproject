@@ -23,36 +23,36 @@ func TestDailyTimesheetListWithProjectId(t *testing.T) {
 	svc := aceproject.NewLoginService(client)
 	guidInfo, _, err := svc.Login(&authInfo)
 
+	if err != nil {
+		t.Error("Expected no error, got ", err)
+	}
 	if guidInfo == nil {
 		t.Error("Expected to login success")
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
+	} else {
+		proj := aceproject.NewProjectService(client, guidInfo)
 
-	proj := aceproject.NewProjectService(client, guidInfo)
+		projects, _, err := proj.List()
 
-	projects, _, err := proj.List()
+		if projects == nil {
+			t.Error("Expected to have a project list, but it is nil")
+		} else if len(projects) == 0 {
+			t.Error("Expected to have a project list, but size=", len(projects))
+		}
+		if err != nil {
+			t.Error("Expected no error, got ", err)
+		}
 
-	if projects == nil {
-		t.Error("Expected to have a project list, but it is nil")
-	} else if len(projects) == 0 {
-		t.Error("Expected to have a project list, but size=", len(projects))
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
+		tsSvc := aceproject.NewTimesheetService(client, guidInfo)
 
-	tsSvc := aceproject.NewTimesheetService(client, guidInfo)
+		projectID := projects[0].ID
+		ts, _, err := tsSvc.ListAllDailyWithProject(projectID)
 
-	projectID := projects[0].ID
-	ts, _, err := tsSvc.ListAllDailyWithProject(projectID)
-
-	if ts == nil {
-		t.Error("Expected to have a daily time sheet list, but it is nil")
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
+		if ts == nil {
+			t.Error("Expected to have a daily time sheet list, but it is nil")
+		}
+		if err != nil {
+			t.Error("Expected no error, got ", err)
+		}
 	}
 }
 
@@ -70,24 +70,24 @@ func TestDailyTimesheetListWithDateRange(t *testing.T) {
 	svc := aceproject.NewLoginService(client)
 	guidInfo, _, err := svc.Login(&authInfo)
 
+	if err != nil {
+		t.Error("Expected no error, got ", err)
+	}
 	if guidInfo == nil {
 		t.Error("Expected to login success")
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
+	} else {
+		tsSvc := aceproject.NewTimesheetService(client, guidInfo)
 
-	tsSvc := aceproject.NewTimesheetService(client, guidInfo)
+		ts, _, err := tsSvc.ListAllDailyWithDateRange(
+			time.Date(2016, 10, 1, 0, 0, 0, 0, time.UTC),
+			time.Date(2016, 10, 6, 0, 0, 0, 0, time.UTC),
+		)
 
-	ts, _, err := tsSvc.ListAllDailyWithDateRange(
-		time.Date(2016, 10, 1, 0, 0, 0, 0, time.UTC),
-		time.Date(2016, 10, 6, 0, 0, 0, 0, time.UTC),
-	)
-
-	if ts == nil {
-		t.Error("Expected to have a daily time sheet list, but it is nil")
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
+		if ts == nil {
+			t.Error("Expected to have a daily time sheet list, but it is nil")
+		}
+		if err != nil {
+			t.Error("Expected no error, got ", err)
+		}
 	}
 }
