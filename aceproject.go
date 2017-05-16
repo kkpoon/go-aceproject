@@ -48,6 +48,10 @@ func NewClient(httpClient *http.Client, authInfo *AuthInfo) (*Client, error) {
 		return nil, err
 	}
 
+	if guidInfo == nil {
+		return nil, fmt.Errorf("aceproject API server does not return login info")
+	}
+
 	return &Client{
 		ProjectService: NewProjectService(httpClient, guidInfo),
 	}, nil

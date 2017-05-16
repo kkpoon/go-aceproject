@@ -22,24 +22,24 @@ func TestUserList(t *testing.T) {
 	svc := aceproject.NewLoginService(client)
 	guidInfo, _, err := svc.Login(&authInfo)
 
+	if err != nil {
+		t.Error("Expected no error, got ", err)
+	}
 	if guidInfo == nil {
 		t.Error("Expected to login success")
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
+	} else {
+		userSvc := aceproject.NewUserService(client, guidInfo)
 
-	userSvc := aceproject.NewUserService(client, guidInfo)
+		users, _, err := userSvc.List()
 
-	users, _, err := userSvc.List()
-
-	if users == nil {
-		t.Error("Expected to have a user list, but it is nil")
-	} else if len(users) == 0 {
-		t.Error("Expected to have a user list, but size=", len(users))
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
+		if users == nil {
+			t.Error("Expected to have a user list, but it is nil")
+		} else if len(users) == 0 {
+			t.Error("Expected to have a user list, but size=", len(users))
+		}
+		if err != nil {
+			t.Error("Expected no error, got ", err)
+		}
 	}
 }
 
@@ -57,23 +57,23 @@ func TestUserListWithActiveness(t *testing.T) {
 	svc := aceproject.NewLoginService(client)
 	guidInfo, _, err := svc.Login(&authInfo)
 
+	if err != nil {
+		t.Error("Expected no error, got ", err)
+	}
 	if guidInfo == nil {
 		t.Error("Expected to login success")
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
+	} else {
+		userSvc := aceproject.NewUserService(client, guidInfo)
 
-	userSvc := aceproject.NewUserService(client, guidInfo)
+		users, _, err := userSvc.ListWithActiveness(true)
 
-	users, _, err := userSvc.ListWithActiveness(true)
-
-	if users == nil {
-		t.Error("Expected to have a user list, but it is nil")
-	} else if len(users) == 0 {
-		t.Error("Expected to have a user list, but size=", len(users))
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
+		if users == nil {
+			t.Error("Expected to have a user list, but it is nil")
+		} else if len(users) == 0 {
+			t.Error("Expected to have a user list, but size=", len(users))
+		}
+		if err != nil {
+			t.Error("Expected no error, got ", err)
+		}
 	}
 }

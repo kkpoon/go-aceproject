@@ -22,24 +22,24 @@ func TestProjectList(t *testing.T) {
 	svc := aceproject.NewLoginService(client)
 	guidInfo, _, err := svc.Login(&authInfo)
 
+	if err != nil {
+		t.Error("Expected no error, got ", err)
+	}
 	if guidInfo == nil {
 		t.Error("Expected to login success")
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
+	} else {
+		proj := aceproject.NewProjectService(client, guidInfo)
 
-	proj := aceproject.NewProjectService(client, guidInfo)
+		projects, _, err := proj.List()
 
-	projects, _, err := proj.List()
-
-	if projects == nil {
-		t.Error("Expected to have a project list, but it is nil")
-	} else if len(projects) == 0 {
-		t.Error("Expected to have a project list, but size=", len(projects))
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
+		if projects == nil {
+			t.Error("Expected to have a project list, but it is nil")
+		} else if len(projects) == 0 {
+			t.Error("Expected to have a project list, but size=", len(projects))
+		}
+		if err != nil {
+			t.Error("Expected no error, got ", err)
+		}
 	}
 }
 
@@ -57,24 +57,24 @@ func TestProjectListWithCompleteness(t *testing.T) {
 	svc := aceproject.NewLoginService(client)
 	guidInfo, _, err := svc.Login(&authInfo)
 
+	if err != nil {
+		t.Error("Expected no error, got ", err)
+	}
 	if guidInfo == nil {
 		t.Error("Expected to login success")
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
+	} else {
+		proj := aceproject.NewProjectService(client, guidInfo)
 
-	proj := aceproject.NewProjectService(client, guidInfo)
+		projects, _, err := proj.ListWithCompleteness(false)
 
-	projects, _, err := proj.ListWithCompleteness(false)
-
-	if projects == nil {
-		t.Error("Expected to have a project list, but it is nil")
-	} else if len(projects) == 0 {
-		t.Error("Expected to have a project list, but size=", len(projects))
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
+		if projects == nil {
+			t.Error("Expected to have a project list, but it is nil")
+		} else if len(projects) == 0 {
+			t.Error("Expected to have a project list, but size=", len(projects))
+		}
+		if err != nil {
+			t.Error("Expected no error, got ", err)
+		}
 	}
 }
 
@@ -92,33 +92,33 @@ func TestProjectGet(t *testing.T) {
 	svc := aceproject.NewLoginService(client)
 	guidInfo, _, err := svc.Login(&authInfo)
 
+	if err != nil {
+		t.Error("Expected no error, got ", err)
+	}
 	if guidInfo == nil {
 		t.Error("Expected to login success")
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
+	} else {
+		proj := aceproject.NewProjectService(client, guidInfo)
 
-	proj := aceproject.NewProjectService(client, guidInfo)
+		projects, _, err := proj.List()
 
-	projects, _, err := proj.List()
+		if projects == nil {
+			t.Error("Expected to have a project list, but it is nil")
+		} else if len(projects) == 0 {
+			t.Error("Expected to have a project list, but size=", len(projects))
+		}
+		if err != nil {
+			t.Error("Expected no error, got ", err)
+		}
 
-	if projects == nil {
-		t.Error("Expected to have a project list, but it is nil")
-	} else if len(projects) == 0 {
-		t.Error("Expected to have a project list, but size=", len(projects))
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
-	}
+		projectID := projects[0].ID
+		project, _, err := proj.Get(projectID)
 
-	projectID := projects[0].ID
-	project, _, err := proj.Get(projectID)
-
-	if project == nil {
-		t.Error("Expected to get project, but it is nil")
-	}
-	if err != nil {
-		t.Error("Expected no error, got ", err)
+		if project == nil {
+			t.Error("Expected to get project, but it is nil")
+		}
+		if err != nil {
+			t.Error("Expected no error, got ", err)
+		}
 	}
 }
