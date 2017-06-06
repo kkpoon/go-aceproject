@@ -27,6 +27,7 @@ type Project struct {
 	TypeID            int64   `json:"PROJECT_TYPE"`
 	Type              string  `json:"PROJECT_TYPE_NAME"`
 	ProjectStatusName string  `json:"PROJECT_STATUS_NAME"`
+	PriorityName      string  `json:"PROJECT_PRIORITY_NAME"`
 	ClientName        string  `json:"CLIENT_NAME"`
 	ContactName       string  `json:"CONTACT_NAME"`
 	ContactPhone      string  `json:"CONTACT_PHONE"`
