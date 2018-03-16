@@ -16,6 +16,7 @@ type TimesheetSaveWorkItemResponse struct {
 
 // SaveWorkItem represents logging time sheet entry to ACEProject
 type SaveWorkItem struct {
+	UserID          *int64  `url:"UserId,omitempty"`
 	TimesheetLineID *int64  `url:"TimesheetLineId,omitempty" json:"TIMESHEET_LINE_ID,omitempty"`
 	WeekStart       string  `url:"WeekStart,omitempty"`
 	TaskID          int64   `url:"TaskId"`
