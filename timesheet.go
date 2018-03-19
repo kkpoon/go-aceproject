@@ -32,6 +32,18 @@ type SaveWorkItem struct {
 	ErrorDesc       *string `json:"ERRORDESCRIPTION,omitempty"`
 }
 
+// TimesheetDeleteWorkItemResponse represents deleteworkitem response
+type TimesheetDeleteWorkItemResponse struct {
+	Status  string           `json:"status"`
+	Results []DeleteWorkItem `json:"results"`
+}
+
+// DeleteWorkItem represents deleting a time sheet entry from ACEProject
+type DeleteWorkItem struct {
+	TimesheetLineID int64   `url:"TimesheetLineId"`
+	ErrorDesc       *string `json:"ERRORDESCRIPTION,omitempty"`
+}
+
 // GetTimeReportParam represents gettimereport request parameter
 type GetTimeReportParam struct {
 	View                    int    `url:"View"`
@@ -100,6 +112,24 @@ func (s *TimesheetService) SaveWorkItem(item *SaveWorkItem) (*SaveWorkItem, *htt
 	httpResp, err := s.sling.New().
 		QueryStruct(CreateFunctionParam("saveworkitem")).
 		QueryStruct(item).
+		ReceiveSuccess(resObj)
+	if resObj != nil && len(resObj.Results) > 0 {
+		if resObj.Results[0].ErrorDesc != nil {
+			return nil, httpResp, Error{*resObj.Results[0].ErrorDesc}
+		}
+		return &resObj.Results[0], httpResp, err
+	}
+	return nil, httpResp, err
+}
+
+// DeleteWorkItem deletes the time sheet item from ACE Project
+func (s *TimesheetService) DeleteWorkItem(timesheetLineID int64) (*DeleteWorkItem, *http.Response, error) {
+	resObj := new(TimesheetDeleteWorkItemResponse)
+	httpResp, err := s.sling.New().
+		QueryStruct(CreateFunctionParam("deleteworkitem")).
+		QueryStruct(&DeleteWorkItem{
+			TimesheetLineID: timesheetLineID,
+		}).
 		ReceiveSuccess(resObj)
 	if resObj != nil && len(resObj.Results) > 0 {
 		if resObj.Results[0].ErrorDesc != nil {
