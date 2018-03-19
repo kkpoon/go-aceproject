@@ -34,11 +34,12 @@ type SaveWorkItem struct {
 
 // GetTimeReportParam represents gettimereport request parameter
 type GetTimeReportParam struct {
-	View              int    `url:"View"`
-	FilterMyWorkItems bool   `url:"FilterMyWorkItems"`
-	FilterDateFrom    string `url:"FilterDateFrom,omitempty"`
-	FilterDateTo      string `url:"FilterDateTo,omitempty"`
-	ProjectID         string `url:"ProjectId,omitempty"`
+	View                    int    `url:"View"`
+	FilterMyWorkItems       bool   `url:"FilterMyWorkItems"`
+	FilterTimeCreatorUserID string `url:"FilterTimeCreatorUserId,omitempty"`
+	FilterDateFrom          string `url:"FilterDateFrom,omitempty"`
+	FilterDateTo            string `url:"FilterDateTo,omitempty"`
+	ProjectID               string `url:"ProjectId,omitempty"`
 }
 
 // DailyTimeReportResponse represents daily time sheet listing response
@@ -139,6 +140,28 @@ func (s *TimesheetService) ListAllDailyWithDateRange(from, to time.Time) ([]Dail
 			FilterMyWorkItems: false,
 			FilterDateFrom:    from.Format("2006-01-02"),
 			FilterDateTo:      to.Format("2006-01-02"),
+		}).
+		ReceiveSuccess(resObj)
+	if resObj != nil && len(resObj.Results) > 0 {
+		if resObj.Results[0].ErrorDesc != nil {
+			return nil, resp, Error{*resObj.Results[0].ErrorDesc}
+		}
+		return *(&resObj.Results), resp, err
+	}
+	return make([]DailyTimesheet, 0), resp, err
+}
+
+// ListAllDailyWithUserIDDateRange returns the of all daily time sheets of a user within the date range
+func (s *TimesheetService) ListAllDailyWithUserIDDateRange(userID int64, from, to time.Time) ([]DailyTimesheet, *http.Response, error) {
+	resObj := new(DailyTimeReportResponse)
+	resp, err := s.sling.New().
+		QueryStruct(CreateFunctionParam("gettimereport")).
+		QueryStruct(&GetTimeReportParam{
+			View:                    1,
+			FilterMyWorkItems:       false,
+			FilterTimeCreatorUserID: strconv.FormatInt(userID, 10),
+			FilterDateFrom:          from.Format("2006-01-02"),
+			FilterDateTo:            to.Format("2006-01-02"),
 		}).
 		ReceiveSuccess(resObj)
 	if resObj != nil && len(resObj.Results) > 0 {
