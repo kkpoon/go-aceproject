@@ -21,17 +21,24 @@ type ProjectResponse struct {
 
 // Project is representing project in ACEProject
 type Project struct {
-	ID                int64   `json:"PROJECT_ID"`
-	Name              string  `json:"PROJECT_NAME"`
-	ProjectNumber     string  `json:"PROJECT_NUMBER"`
-	TypeID            int64   `json:"PROJECT_TYPE"`
-	Type              string  `json:"PROJECT_TYPE_NAME"`
-	ProjectStatusName string  `json:"PROJECT_STATUS_NAME"`
-	PriorityName      string  `json:"PROJECT_PRIORITY_NAME"`
-	ClientName        string  `json:"CLIENT_NAME"`
-	ContactName       string  `json:"CONTACT_NAME"`
-	ContactPhone      string  `json:"CONTACT_PHONE"`
-	ErrorDesc         *string `json:"ERRORDESCRIPTION,omitempty"`
+	ID                 int64   `json:"PROJECT_ID"`
+	Name               string  `json:"PROJECT_NAME"`
+	ProjectNumber      string  `json:"PROJECT_NUMBER"`
+	TypeID             int64   `json:"PROJECT_TYPE"`
+	Type               string  `json:"PROJECT_TYPE_NAME"`
+	ProjectStatusName  string  `json:"PROJECT_STATUS_NAME"`
+	PriorityName       string  `json:"PROJECT_PRIORITY_NAME"`
+	ClientName         string  `json:"CLIENT_NAME"`
+	ContactName        string  `json:"CONTACT_NAME"`
+	ContactPhone       string  `json:"CONTACT_PHONE"`
+	DateCreated        string  `json:"DATE_CREATED"`
+	DateModified       string  `json:"DATE_MODIFIED"`
+	ProjectCreatorID   int64   `json:"PROJECT_CREATOR_ID"`
+	Username           string  `json:"USERNAME"`
+	UserUpdateID       int64   `json:"USER_UPDATE_ID"`
+	UserUpdateUsername string  `json:"USER_UPDATE_USERNAME"`
+	AssignedUsers      string  `json:"ASSIGNED_USERS"`
+	ErrorDesc          *string `json:"ERRORDESCRIPTION,omitempty"`
 }
 
 // ProjectService provides methods to interact with project specific action
