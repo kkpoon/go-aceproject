@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-const baseURL = "http://api.aceproject.com"
+const baseURL = "https://api.aceproject.com"
 
 // Function represents the ACEProject fct parameter in URL
 type Function struct {
